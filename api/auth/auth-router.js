@@ -1,7 +1,16 @@
 const router = require('express').Router();
+const bcrypt = require('bcryptjs')
+const Jokes = require('../jokes/jokes-data')
 
-router.post('/register', (req, res) => {
-  res.end('implement register, please!');
+router.post('/register', (req, res, next) => {
+  const { username, password } = req.body
+  const hash = bcrypt.hashSync(password, 8)
+
+  Jokes.add({ username, password: hash })
+  .then(saved => {
+    res.status(201).json(saved)
+  })
+  .catch(next)
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -29,8 +38,14 @@ router.post('/register', (req, res) => {
   */
 });
 
-router.post('/login', (req, res) => {
-  res.end('implement login, please!');
+router.post('/login', (req, res, next) => {
+  const {password} = req.body
+  if (bcrypt.compareSync(password, req.user.password)){
+    req.session.user = req.user
+    res.json({ message: "welcome, Captain Marvel"})
+  } else {
+    next({ status: 401, message: 'username and password required'})
+  }
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
