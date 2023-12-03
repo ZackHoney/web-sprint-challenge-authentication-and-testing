@@ -44,7 +44,7 @@ router.post('/login', (req, res, next) => {
     req.session.user = req.user
     res.json({ message: "welcome, Captain Marvel"})
   } else {
-    next({ status: 401, message: 'username and password required'})
+    next({ status: 401, message: 'username and password required'});
   }
   /*
     IMPLEMENT
