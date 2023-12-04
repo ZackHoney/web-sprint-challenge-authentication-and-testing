@@ -1,13 +1,13 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs')
-const Jokes = require('../jokes/jokes-data')
+const Users = require('../users/users-model')
 const checkUsernameFree = require('../middleware/checkUsernameFree')
 
 router.post('/register', checkUsernameFree, (req, res, next) => {
   const { username, password } = req.body
   const hash = bcrypt.hashSync(password, 8)
 
-  Jokes.add({ username, password: hash })
+  Users.add({ username, password: hash })
   .then(joke => {
     res.status(201).json(joke)
   })
