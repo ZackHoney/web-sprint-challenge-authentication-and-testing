@@ -1,5 +1,12 @@
 module.exports = (req, res, next) => {
-  next();
+  if (req.session.user) {
+    next()
+  } else if(!res.session.user.token) {
+    next({ status: 401, message: 'token required'})
+  } 
+  else {
+    next({ status: 401, message: 'token invalid'})
+  }
   /*
     IMPLEMENT
 
