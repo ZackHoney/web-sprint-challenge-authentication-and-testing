@@ -2,8 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const session = require('express-session')
-const Store = require('connect-session-knex')(session)
-const knex = require('knex')
+
 
 const restrict = require('./middleware/restricted.js');
 
@@ -17,13 +16,6 @@ server.use(session({
     secret: 'shh',
     saveUninitialized: false,
     resave: false,
-    // store: new Store({
-    //   knex,
-    //   createTable: true,
-    //   clearInterval: 1000 * 60 * 10,
-    //   tableName: 'sessions',
-    //   sidfieldname: 'sid',
-    // }),
     cookie: {
       maxAge: 1000 * 60 * 10,
       secure: false,

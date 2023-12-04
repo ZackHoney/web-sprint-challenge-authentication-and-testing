@@ -8,8 +8,8 @@ router.post('/register', checkUsernameFree, (req, res, next) => {
   const hash = bcrypt.hashSync(password, 8)
 
   Jokes.add({ username, password: hash })
-  .then(saved => {
-    res.status(201).json(saved)
+  .then(joke => {
+    res.status(201).json(joke)
   })
   .catch(next)
   /*
@@ -43,7 +43,7 @@ router.post('/login', (req, res, next) => {
   const {password} = req.body
   if (bcrypt.compareSync(password, req.user.password)){
     req.session.user = req.user
-    res.json({ message: "welcome, Captain Marvel"})
+    res.json({ message: "welcome, Captain Marvel", token: req.user.token})
   } else {
     next({ status: 401, message: 'username and password required'});
   }
