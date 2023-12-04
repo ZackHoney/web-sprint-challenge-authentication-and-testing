@@ -17,13 +17,13 @@ server.use(session({
     secret: 'shh',
     saveUninitialized: false,
     resave: false,
-    store: new Store({
-      knex,
-      createTable: true,
-      clearInterval: 1000 * 60 * 10,
-      tableName: 'sessions',
-      sidfieldname: 'sid',
-    }),
+    // store: new Store({
+    //   knex,
+    //   createTable: true,
+    //   clearInterval: 1000 * 60 * 10,
+    //   tableName: 'sessions',
+    //   sidfieldname: 'sid',
+    // }),
     cookie: {
       maxAge: 1000 * 60 * 10,
       secure: false,
