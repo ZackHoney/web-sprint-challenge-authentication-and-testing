@@ -5,10 +5,8 @@ const session = require('express-session')
 
 
 const restrict = require('./middleware/restricted.js');
-
 const authRouter = require('./auth/auth-router.js');
 const jokesRouter = require('./jokes/jokes-router.js');
-
 const server = express();
 
 server.use(session({
