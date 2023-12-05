@@ -15,7 +15,7 @@ function findBy(filter) {
 function findById(id) {
     return db('users')
     .select(
-        'username',
+        // 'username',
         'password'
     )
     .where('id', id)
