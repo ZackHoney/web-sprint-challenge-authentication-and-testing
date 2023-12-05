@@ -39,7 +39,7 @@ router.post('/register', (req, res, next) => {
 });
 
 router.post('/login', (req, res, next) => {
-  const {password} = req.body
+  const { username, password} = req.body
   if (bcrypt.compareSync(password, req.user.password)){
     req.session.user = req.user
     res.json({ status: 200, message: "welcome, Captain Marvel", token: req.user.token})
