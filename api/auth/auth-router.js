@@ -2,8 +2,14 @@ const router = require('express').Router();
 const bcrypt = require('bcryptjs')
 
 router.post('/register', (req, res, next) => {
+  const { username, password } = req.body
+  const hash = bcrypt.hashSync(password, 8)
 
-
+  .add({ username, password: hash })
+  .then(joke => {
+    res.status(201).json(joke)
+  })
+  .catch(next)
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
