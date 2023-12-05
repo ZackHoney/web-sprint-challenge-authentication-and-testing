@@ -42,7 +42,7 @@ router.post('/login', (req, res, next) => {
   const {password} = req.body
   if (bcrypt.compareSync(password, req.user.password)){
     req.session.user = req.user
-    res.json({ message: "welcome, Captain Marvel", token: req.user.token})
+    res.json({ status: 200, message: "welcome, Captain Marvel", token: req.user.token})
   } else {
     next({ status: 401, message: 'username and password required'});
   }
