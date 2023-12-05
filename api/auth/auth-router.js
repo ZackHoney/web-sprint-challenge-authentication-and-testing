@@ -1,16 +1,22 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs')
 const Users = require('../users/users-model')
+const checkUsernameFree = require('../middleware/checkUsernameFree')
 
-router.post('/register', (req, res, next) => {
+router.post('/register', checkUsernameFree,(req, res, next) => {
   const { username, password } = req.body
   const hash = bcrypt.hashSync(password, 8)
-
+  if (!username || !password) {
+    res.status(401).json({ 
+      message: 'username and password required'
+    })
+  } else {
   Users.add({ username, password: hash })
   .then(user => {
     res.status(201).json(user)
   })
   .catch(next)
+}
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
