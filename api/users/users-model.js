@@ -8,10 +8,10 @@ function find() {
         )
 }
 
-function findBy(username) {
+function findBy(filter) {
     return db('users')
-        .where('username', username)
-        .first()
+        .where(filter)
+        
 }
 
 function findById(id) {
