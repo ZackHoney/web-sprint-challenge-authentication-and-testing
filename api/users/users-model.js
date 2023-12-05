@@ -3,8 +3,8 @@ const db = require('../../data/dbConfig')
 function find() {
     return db('users')
     .select(
-        'user_id',
-        'username'
+        'username',
+        'password'
     )
 }
 
@@ -15,7 +15,6 @@ function findBy(filter) {
 function findById(user_id) {
     return db('users')
     .select(
-        'user_id',
         'username',
         'password'
     )
