@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs')
 const Users = require('../users/users-model')
+const jwt = require('jsonwebtoken')
+const { JWT_SECRET } = require('../secrets/index')
 const checkUsernameFree = require('../middleware/checkUsernameFree')
 
 router.post('/register', checkUsernameFree,(req, res, next) => {
@@ -45,10 +47,9 @@ router.post('/register', checkUsernameFree,(req, res, next) => {
 });
 
 router.post('/login', (req, res, next) => {
-  const {password} = req.body
-  if (bcrypt.compareSync(password, req.user.password)){
-    req.session.user = req.user
-    res.json({ status: 200, message: "welcome, Captain Marvel", token: req.user.token})
+  if (bcrypt.compareSync(req.body.password, req.user.password)){
+    const token = buildToken(req.user)
+    res.json({ status: 200, message: "welcome, Captain Marvel", token})
   } else {
     next({ status: 401, message: 'username and password required'});
   }
@@ -76,5 +77,16 @@ router.post('/login', (req, res, next) => {
       the response body should include a string exactly as follows: "invalid credentials".
   */
 });
+
+function buildToken(user) {
+  const payload = {
+    subject: user.user_id,
+    username: user.username,
+  }
+  const options = {
+    expiresIn: '1d',
+  }
+  return jwt.sign(payload, JWT_SECRET, options)
+}
 
 module.exports = router;
