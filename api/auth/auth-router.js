@@ -6,7 +6,7 @@ const checkUsernameFree = require('../middleware/checkUsernameFree')
 router.post('/register', checkUsernameFree,(req, res, next) => {
   const { username, password } = req.body
   const hash = bcrypt.hashSync(password, 8)
-  if (!username || !password) {
+  if (!req.body.username || !req.body.password) {
     res.status(401).json({ 
       message: 'username and password required'
     })
