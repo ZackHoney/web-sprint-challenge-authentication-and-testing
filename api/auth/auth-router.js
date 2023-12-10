@@ -5,13 +5,13 @@ const checkUsernameFree = require('../middleware/checkUsernameFree')
 
 router.post('/register', checkUsernameFree,(req, res, next) => {
   const { username, password } = req.body
-  // const hash = bcrypt.hashSync(password, 8)
-  if (!req.body.username || !req.body.password) {
+  const hash = bcrypt.hashSync(password, 8)
+  if (!req.body.username || !req.bodypassword) {
     res.status(401).json({ 
       message: 'username and password required'
     })
   } else {
-  Users.add({ username, password })
+  Users.add({ username, password: hash })
   .then(user => {
     res.status(201).json(user)
   })
@@ -46,9 +46,9 @@ router.post('/register', checkUsernameFree,(req, res, next) => {
 
 router.post('/login', (req, res, next) => {
   const { password} = req.body
-  if (password){
+  if (bcrypt.compareSync(password, req.user.password)){
     req.session.user = req.user
-    res.json({ status: 200, message: "welcome, Captain Marvel"})
+    res.json({ status: 200, message: "welcome, Captain Marvel", token: req.user.token})
   } else {
     next({ status: 401, message: 'username and password required'});
   }
