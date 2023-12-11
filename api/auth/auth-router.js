@@ -5,21 +5,22 @@ const jwt = require('jsonwebtoken')
 const { JWT_SECRET } = require('../secrets/index')
 const checkUsernameFree = require('../middleware/checkUsernameFree')
 const checkUsernameExists = require('../middleware/checkUsernameExists')
+const db = require('../users/users-model')
 
-router.post('/register', checkUsernameFree,(req, res, next) => {
+router.post('/register', checkUsernameFree, (req, res, next) => {
   const { username, password } = req.body
   const hash = bcrypt.hashSync(password, 8)
   if (!username || !password) {
-    res.status(401).json({ 
+    res.status(401).json({
       message: 'username and password required'
     })
   } else {
-  Users.add({ username, password: hash })
-  .then(user => {
-    res.status(201).json(user)
-  })
-  .catch(next)
-}
+    Users.add({ username, password: hash })
+      .then(user => {
+        res.status(201).json(user)
+      })
+      .catch(next)
+  }
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -47,17 +48,21 @@ router.post('/register', checkUsernameFree,(req, res, next) => {
   */
 });
 
-router.post('/login', checkUsernameExists, (req, res, next) => {
-  const { username, password } = req.body
-  if(!username || !password) {
-    res.status(401).json({
-      message: 'username and password required'
-    })
-  } else if(bcrypt.compareSync(req.body.password, req.user.password)){
-    const token = buildToken(req.user)
-    res.json({ message: "welcome, Captain Marvel", token})
-  } else {
-    next({ status: 401, message: 'invalid credentials'});
+router.post('/login', checkUsernameExists, async (req, res, next) => {
+  try {
+    const { username, password } = req.body
+    if (!username || !password) {
+      res.status(401).json({
+        message: 'username and password required'
+      })
+    } 
+    const user = await db('users').where('username', username).first()
+    if (user && bcrypt.compareSync(req.body.password, req.user.password)) {
+      const token = buildToken(req.user)
+      res.json({ message: "welcome, Captain Marvel", token })
+    }
+  } catch (err) {
+    next({ message: 'invalid credentials' });
   }
 }
   /*
