@@ -1,5 +1,5 @@
 // const User = require('../users/users-model')
-const db = require('../../data/dbConfig')
+const db = require('../../data/dbConfig');
 
 async function checkUsernameFree(req, res, next)  {
     try {
