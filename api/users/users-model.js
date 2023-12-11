@@ -11,6 +11,10 @@ function find() {
 
 function findBy(filter) {
     return db('users')
+        .select(
+            'username',
+            'password'
+        )
         .where(filter)  
 }
 
