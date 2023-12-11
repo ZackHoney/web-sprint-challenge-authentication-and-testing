@@ -8,6 +8,7 @@ const checkUsernameExists = require('../middleware/checkUsernameExists')
 
 router.post(
   "/register",
+  checkUsernameExists,
   checkUsernameFree,
   async (req, res, next) => {
     try {
