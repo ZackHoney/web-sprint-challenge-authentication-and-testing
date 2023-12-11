@@ -50,6 +50,7 @@ router.post('/register', checkUsernameFree,(req, res, next) => {
 router.post('/login', checkUsernameExists, (req, res, next) => {
   if(!req.body.username || !req.body.password) {
     res.json({
+      status: 401,
       message: 'username and password required'
     })
   } else if(bcrypt.compareSync(req.body.password, req.user.password)){
