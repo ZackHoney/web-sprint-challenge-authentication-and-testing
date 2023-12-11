@@ -1,18 +1,19 @@
-const User = require('../users/users-model')
+// const User = require('../users/users-model')
+const db = require('../../data/dbConfig')
 
-async function checkUsernameFree(req, res, next) {
+const checkUsernameFree = async (req, res, next) => {
     try {
-        const user = await User.findBy({username: req.body.username})
-        if(!user.length) {
-            req.user = user
-            next()
-        }
-        else {
-            next({ message: 'username taken', status: 422 })
-        }
+      const { username } = req.body;
+      const [existingUser] = await db("users").where("username", username);
+  
+      if (!existingUser) {
+        next(); // Username is not taken
+      } else {
+        res.status(400).json({ message: "Username is already taken." });
+      }
     } catch (err) {
-        next(err)
+      next(err);
     }
-}
+  };
 
 module.exports = checkUsernameFree
