@@ -48,12 +48,17 @@ router.post('/register', checkUsernameFree,(req, res, next) => {
 });
 
 router.post('/login', checkUsernameExists, (req, res, next) => {
-  if (bcrypt.compareSync(req.body.password, req.user.password)){
+  if(!req.body.username || !req.body.password) {
+    res.json({
+      message: 'username and password required'
+    })
+  } else if(bcrypt.compareSync(req.body.password, req.user.password)){
     const token = buildToken(req.user)
     res.json({ message: "welcome, Captain Marvel", token})
   } else {
-    next({ status: 401, message: 'username and password required'});
+    next({ status: 401, message: 'invalid credentials'});
   }
+}
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -77,7 +82,7 @@ router.post('/login', checkUsernameExists, (req, res, next) => {
     4- On FAILED login due to `username` not existing in the db, or `password` being incorrect,
       the response body should include a string exactly as follows: "invalid credentials".
   */
-});
+);
 
 function buildToken(user) {
   const payload = {
