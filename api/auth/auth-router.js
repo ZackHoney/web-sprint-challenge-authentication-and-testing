@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs')
-// const Users = require('../users/users-model')
 const db = require('../../data/dbConfig')
 const jwt = require('jsonwebtoken')
 const { JWT_SECRET } = require('../secrets/index')
