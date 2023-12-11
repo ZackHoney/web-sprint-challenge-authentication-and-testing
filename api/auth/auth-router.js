@@ -11,7 +11,7 @@ router.post('/register', checkUsernameFree,(req, res, next) => {
   const hash = bcrypt.hashSync(password, 8)
   if (!username || !password) {
     res.status(401).json({ 
-      message: 'username and password required'
+      message: 'Username and password required.'
     })
   } else {
   Users.add({ username, password: hash })
@@ -51,7 +51,7 @@ router.post('/login', checkUsernameExists, (req, res, next) => {
   const { username, password } = req.body
   if(!username || !password) {
     res.status(401).json({
-      message: 'username and password required'
+      message: 'Username and password required.'
     })
   } else if(bcrypt.compareSync(req.body.password, req.user.password)){
     const token = buildToken(req.user)
