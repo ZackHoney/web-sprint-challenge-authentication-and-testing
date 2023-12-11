@@ -4,7 +4,7 @@ const db = require('../../data/dbConfig')
 async function checkUsernameFree(req, res, next)  {
     try {
       const { username } = req.body;
-      const [existingUser] = await db("users").where("username", username).first();
+      const [existingUser] = await db("users").where("username", username);
                                
       if (!existingUser) {
         next(); // Username is not taken
