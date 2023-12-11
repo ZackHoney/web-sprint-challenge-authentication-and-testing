@@ -27,7 +27,7 @@ router.post(
       res.status(201).json({
         id: newUser.id,
         username: newUser.username,
-        password: newUser.password, // In practice, you should not return the password
+        password: newUser.password,
       });
     } catch (err) {
       next(err);
