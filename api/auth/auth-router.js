@@ -6,9 +6,9 @@ const { JWT_SECRET } = require('../secrets/index')
 const checkUsernameFree = require('../middleware/checkUsernameFree')
 const checkUsernameExists = require('../middleware/checkUsernameExists')
 
-router.post('/register', (req, res, next) => {
+router.post('/register', checkUsernameFree,(req, res, next) => {
   const { username, password } = req.body
-  const hash = bcrypt.hashSync(password, 8)
+  const hash = bcrypt.hashSync( req.body.password, 8)
   if (!username || !password) {
     res.status(401).json({ 
       message: 'Username and password required.'
