@@ -4,6 +4,7 @@ const Users = require('../users/users-model')
 const jwt = require('jsonwebtoken')
 const { JWT_SECRET } = require('../secrets/index')
 const checkUsernameFree = require('../middleware/checkUsernameFree')
+const checkUsernameExists = require('../middleware/checkUsernameExists')
 
 router.post('/register', checkUsernameFree,(req, res, next) => {
   const { username, password } = req.body
@@ -46,10 +47,10 @@ router.post('/register', checkUsernameFree,(req, res, next) => {
   */
 });
 
-router.post('/login', (req, res, next) => {
+router.post('/login', checkUsernameExists, (req, res, next) => {
   if (bcrypt.compareSync(req.body.password, req.user.password)){
     const token = buildToken(req.user)
-    res.json({ status: 200, message: "welcome, Captain Marvel", token})
+    res.json({ message: "welcome, Captain Marvel", token})
   } else {
     next({ status: 401, message: 'username and password required'});
   }
