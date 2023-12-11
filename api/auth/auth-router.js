@@ -1,25 +1,38 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs')
-const Users = require('../users/users-model')
+// const Users = require('../users/users-model')
 const jwt = require('jsonwebtoken')
 const { JWT_SECRET } = require('../secrets/index')
-const checkUsernameFree = require('../middleware/checkUsernameFree')
+const checkNameTaken = require('../middleware/checkUsernameFree')
 const checkUsernameExists = require('../middleware/checkUsernameExists')
 
-router.post('/register', checkUsernameFree,(req, res, next) => {
-  const { username, password } = req.body
-  const hash = bcrypt.hashSync(password, 8)
-  if (!username || !password) {
-    res.status(401).json({ 
-      message: 'username and password required'
-    })
-  } else {
-  Users.add({ username, password: hash })
-  .then(user => {
-    res.status(201).json(user)
-  })
-  .catch(next)
-}
+router.post(
+  "/register",
+  checkNameTaken,
+  async (req, res, next) => {
+    try {
+      const { username, password } = req.body;
+      if (!username || !password) {
+        return res
+          .status(400)
+          .json({ message: "username and password required" });
+      }
+
+      const hashedPassword = await bcrypt.hash(password, BCRYPT_ROUNDS);
+      const newUser = { username, password: hashedPassword };
+      const [id] = await db("users").insert(newUser);
+      newUser.id = id;
+
+      res.status(201).json({
+        id: newUser.id,
+        username: newUser.username,
+        password: newUser.password, // In practice, you should not return the password
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -45,7 +58,7 @@ router.post('/register', checkUsernameFree,(req, res, next) => {
     4- On FAILED registration due to the `username` being taken,
       the response body should include a string exactly as follows: "username taken".
   */
-});
+// });
 
 router.post('/login', checkUsernameExists, (req, res, next) => {
   const { username, password } = req.body
