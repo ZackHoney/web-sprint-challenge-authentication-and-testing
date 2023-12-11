@@ -4,6 +4,7 @@ async function checkUsernameFree(req, res, next) {
     try {
         const user = await User.findBy({username: req.body.username})
         if(!user.length) {
+            req.user = user
             next()
         }
         else {
