@@ -1,10 +1,10 @@
-// const User = require('../users/users-model')
-const db = require('../../data/dbConfig')
+const User = require('../users/users-model')
+// const db = require('../../data/dbConfig')
 
 async function checkUsernameFree(req, res, next) {
     try {
         const { username } = req.body
-        const { user } = await db('users').where('username', username)
+        const { user } = await User.findBy(username)
         if(!user.length) {
             next()
         }
