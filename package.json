@@ -23,8 +23,7 @@
     "helmet": "5.0.2",
     "jsonwebtoken": "^9.0.2",
     "knex": "2.0.0",
-    "session": "^0.1.0",
-    "sqlite3": "5.0.8"
+    "session": "^0.1.0"
   },
   "devDependencies": {
     "@types/jest": "27.5.0",
@@ -32,6 +31,7 @@
     "eslint": "8.14.0",
     "jest": "28.1.0",
     "nodemon": "2.0.16",
+    "sqlite3": "^5.1.6",
     "supertest": "6.2.3"
   }
 }
