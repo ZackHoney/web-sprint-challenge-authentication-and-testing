@@ -62,19 +62,29 @@ router.post(
   */
 // });
 
-router.post('/login', checkUsernameExists, (req, res, next) => {
-  const { username, password } = req.body
-  if(!username || !password) {
-    res.status(401).json({
-      message: 'Username and password required.'
-    })
-  } else if(bcrypt.compareSync(req.body.password, req.user.password)){
-    const token = buildToken(req.user)
-    res.json({ message: "welcome, Captain Marvel", token})
-  } else {
-    next({ status: 401, message: 'invalid credentials'});
+router.post("/login", checkUsernameExists, async (req, res, next) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res
+        .status(400)
+        .json({ message: "username and password required" });
+    }
+
+    const user = await db("users").where("username", username).first();
+    if (user && bcrypt.compareSync(password, user.password)) {
+      const token = buildToken(user);
+      res.status(200).json({
+        message: `welcome, ${username}`,
+        token: token,
+      });
+    } else {
+      res.status(401).json({ message: "invalid credentials" });
+    }
+  } catch (err) {
+    next(err);
   }
-}
+});
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -98,7 +108,7 @@ router.post('/login', checkUsernameExists, (req, res, next) => {
     4- On FAILED login due to `username` not existing in the db, or `password` being incorrect,
       the response body should include a string exactly as follows: "invalid credentials".
   */
-);
+// );
 
 function buildToken(user) {
   const payload = {

@@ -1,18 +1,11 @@
-const User = require('../users/users-model')
-
-async function checkUsernameExists(req, res, next)  {
-    try {
-        const [user] = await User.findBy({ username: req.body.username })
-        if (!user) {
-            next({ status: 401, message: 'invalid credentials' })
-        } else {
-            req.user = user
-            next()
-        }
-    } catch (err) {
-        next(err)
+const checkUsernameExists = (req, res, next) => {
+    const { username, password } = req.body;
+    if (username && password) {
+      next();
+    } else {
+      res.status(400).json({ message: "Username and password are required." });
     }
-}
-
+  };
+  
 
 module.exports = checkUsernameExists
