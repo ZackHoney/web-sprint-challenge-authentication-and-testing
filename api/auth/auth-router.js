@@ -8,13 +8,16 @@ const checkUsernameExists = require('../middleware/checkUsernameExists')
 
 router.post('/register', checkUsernameFree,(req, res, next) => {
   const { username, password } = req.body
-  const hash = bcrypt.hashSync( req.body.password, 8)
+  const hashPassword = (password, cb => {
+    const hash = bcrypt.hashSync(password, 8)
+    cb(hash)
+  })
   if (!username || !password) {
     res.status(401).json({ 
       message: 'Username and password required.'
     })
   } else {
-  Users.add({ username, password: hash })
+  Users.add({ username, password: hashPassword })
   .then(user => {
     res.status(201).json(user)
   })
