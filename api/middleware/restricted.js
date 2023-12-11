@@ -2,15 +2,7 @@ const { JWT_SECRET } = require('../secrets/index');
 const jwt = require('jsonwebtoken')
 
 module.exports = (req, res, next) => {
-  // const token = req.headers.authorization
-  // if (req.session.user) {
-  //   next()
-  // } else if(!req.session.user.token) {
-  //   next({ status: 401, message: 'token required'})
-  // } 
-  // else {
-  //   next({ status: 401, message: 'token invalid'})
-  // }
+
   const token = req.headers.authorization
     if (!token) {
        return next({ status: 401, message: 'token required'})
