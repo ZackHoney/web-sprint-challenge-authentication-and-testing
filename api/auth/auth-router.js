@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 const { JWT_SECRET } = require('../secrets/index')
 const checkNameTaken = require('../middleware/checkUsernameFree')
 const checkUsernameExists = require('../middleware/checkUsernameExists')
+const db = require('../../data/dbConfig')
 
 router.post(
   "/register",
@@ -18,7 +19,7 @@ router.post(
           .json({ message: "username and password required" });
       }
 
-      const hashedPassword = await bcrypt.hash(password, BCRYPT_ROUNDS);
+      const hashedPassword = await bcrypt.hash(password, 8);
       const newUser = { username, password: hashedPassword };
       const [id] = await db("users").insert(newUser);
       newUser.id = id;
